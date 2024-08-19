@@ -1,0 +1,45 @@
+.Header{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5vh;
+}
+.logoTitle{
+    /* margin-right: 20vw; */
+    margin-left: 2vw;
+}
+.user-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center ;
+    gap: 1.5vw ;
+    margin-right: 3vw;
+  }
+.userLogo{
+    font-size: "2em" !;
+    cursor: pointer;
+  }
+.Overview{
+    margin-top: 10vh;
+    margin-left: 2vw;
+}
+.Overview-cards{
+    margin-top: 2.5vh;
+    margin-right: 2vw;
+}
+.no-padding {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .DeviceMonitoring{
+    margin-top: 5vh;
+    margin-left: 2vw;
+  }
+  .DeviceList{
+    margin-top: 3vh;
+    
+    display: flex;
+    justify-content: space-around;
+  }

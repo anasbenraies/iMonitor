@@ -6,6 +6,8 @@ import "./Home.css"
 import { Container, Row, Col, Alert, Dropdown } from 'react-bootstrap';
 import TheBarChart from '../../Components/TheBarChart';
 import TheLineChart from '../../Components/TheLineChart';
+import HeatmapU from '../../Components/HeatmapU';
+
 
 /**
  * The Home function is the main component of the application.
@@ -73,12 +75,17 @@ function Home() {
         break
       }
     }
-    getDeviceUsagesDurationAndEnergyUsageByDate()
+
   }
+
+
+  useEffect(() => {
+    getDeviceUsagesDurationAndEnergyUsageByDate()
+  }, [SelectedDeviceUsages])
 
   const getDeviceUsagesDurationAndEnergyUsageByDate = () => {
     const deviceUsagesByDate = SelectedDeviceUsages.reduce((groups, deviceUsage) => {
-      const {usageDate, durationInMinutes, energy_usage_in_kwh, device} = deviceUsage
+      const { usageDate, durationInMinutes, energy_usage_in_kwh, device } = deviceUsage
       const key = usageDate
       if (!groups[key]) {
         groups[key] = {
@@ -95,11 +102,11 @@ function Home() {
 
     const deviceUsagesByDateList = Object.values(deviceUsagesByDate).slice(-7)
     setDeviceUsagesForCharts(deviceUsagesByDateList)
-   
+
     console.log("deviceUsagesByDateList", deviceUsagesByDateList)
   }
 
-  
+
 
   // useEffect hook for data fetching the Device usage of the current user with his iD 
   useEffect(() => {
@@ -169,7 +176,6 @@ function Home() {
         console.log("result after sorting", groupedDevicesArray);
         console.log("length of the sorted array", groupedDevicesArray.length);
         setSortedDevicesUsages(groupedDevicesArray)
-        console.log("sorted devices usages", SortedDevicesUsages)
         // set the devices list 
         if (groupedDevicesArray.length > 0) {
           const devicesInfo = groupedDevicesArray.map(deviceUsages => ({
@@ -180,6 +186,8 @@ function Home() {
           setDevicesList(devicesInfo)
           console.log("devices list", devicesList)
         }
+
+
         // if ( groupedDevicesArray) {
         //      for ( let deviceUsagesByDevice of groupedDevicesArray ){
         //       if(deviceUsagesByDevice[0].device.id && deviceUsagesByDevice[0].device.type && deviceUsagesByDevice[0].device.model){
@@ -222,24 +230,27 @@ function Home() {
           <Container fluid >
             <Row style={{ marginLeft: "-1.5vw" }}>
               <Col xs={6} md={4} >
-                <Alert variant={"info"} >
+                <Alert variant={"success"} >
                   Total Energy use this month : {TotalThisMonth} kWh
                 </Alert>
               </Col>
               <Col xs={6} md={4}>
-                <Alert variant={"info"} >
+                <Alert variant={"success"} >
                   Total devices : {DevicesNumber}
                 </Alert>
               </Col>
               <Col md={4}>
-                <Alert variant={"info"} >
+                <Alert variant={"success"} >
                   Last Usage : {LastDeviceUsage?.device.type}-{LastDeviceUsage?.device.model}-{LastDeviceUsage?.usageDate}
                 </Alert>
               </Col>
             </Row>
           </Container>
         </div>
-
+        <h2>Heatmap</h2>
+        <div className='Heatmap'>
+          <HeatmapU />
+        </div>
       </div>
       <div className="DeviceMonitoring">
         <h2>
@@ -247,17 +258,18 @@ function Home() {
         </h2>
 
         <div className="DeviceList">
-          <div className='DropdownDeviesList'><Dropdown>
-            <Dropdown.Toggle style={{ backgroundColor: "white", borderColor: "black",color:"black" }}>
-            {SelectedDeviceUsages.length>0?SelectedDeviceUsages[0]?.device?.type+"-"+SelectedDeviceUsages[0]?.device?.model+"-|ID:"+SelectedDeviceUsages[0]?.device?.id+"|":"Choose a device"}
+          <div className='DropdownDeviesList'>
+            <Dropdown>
+              <Dropdown.Toggle style={{ backgroundColor: "white", borderColor: "black", color: "black" }}>
+                {SelectedDeviceUsages.length > 0 ? SelectedDeviceUsages[0]?.device?.type + "-" + SelectedDeviceUsages[0]?.device?.model + "-|ID:" + SelectedDeviceUsages[0]?.device?.id + "|" : "Choose a device"}
 
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              {devicesList.map((device, index) => (
-                <Dropdown.Item onClick={() => PickDeviceUsages(device.id)} key={index}>{device.type}-{device.model}-|ID:{device.id}|</Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {devicesList.map((device, index) => (
+                  <Dropdown.Item onClick={() => PickDeviceUsages(device.id)} key={index}>{device.type}-{device.model}-|ID:{device.id}|</Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
         </div>
       </div>
@@ -266,8 +278,8 @@ function Home() {
         <h4>Energy usage</h4>
       </div>
       <div className='Charts'>
-        <TheBarChart data={DeviceUsagesForCharts}/>
-        <TheLineChart data={DeviceUsagesForCharts}/>
+        <TheBarChart data={DeviceUsagesForCharts} />
+        <TheLineChart data={DeviceUsagesForCharts} />
       </div>
     </div>
   )

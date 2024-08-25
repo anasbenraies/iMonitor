@@ -49,11 +49,11 @@ import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 
 export default class Example extends PureComponent {
   static demoUrl = 'https://codesandbox.io/p/sandbox/simple-bar-chart-72d7y5';
-
+  
   render() {
     const {data} = this.props;
     return (
-      <div style={{ width: "45vw", height: '45vh' }}> 
+      <div style={{ width: "38vw", height: '40vh' }}> 
 
      
       <ResponsiveContainer width="100%" height="100%">
@@ -73,7 +73,7 @@ export default class Example extends PureComponent {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="durationInMinutes" fill="#17a2b860" activeBar={<Rectangle fill="pink" stroke="purple" />} />
+          <Bar dataKey="durationInMinutes" fill="#b2e281" activeBar={<Rectangle fill="#8bc34a" stroke="#8bc34a" />} />
         </BarChart>
       </ResponsiveContainer>
       </div>

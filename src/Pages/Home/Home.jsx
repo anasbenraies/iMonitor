@@ -30,6 +30,8 @@ function Home() {
   const [SelectedDeviceUsages, setSelectedDeviceUsages] = useState([])
   // this sets the device usages to be shown by the Graph grouped by date
   const [DeviceUsagesForCharts, setDeviceUsagesForCharts] = useState([])
+  // this sets the device usages to be shown by the Heatmap 
+  const [SelectedDeviceUsagesForHeatmap, setSelectedDeviceUsagesForHeatmap] = useState([])
   /**
    * Finds the latest device usage date and sets it as the last device usage.
    *
@@ -83,6 +85,15 @@ function Home() {
     getDeviceUsagesDurationAndEnergyUsageByDate()
   }, [SelectedDeviceUsages])
 
+  /**
+   * This function processes the selected device usages by grouping it by date and summing the energy usage and duration in minutes.
+   *
+   * It first groups the selected device usages by date using the reduce function.
+   * Then it converts the grouped object to an array of objects and sorts it by date.
+   * Finally, it sets the devices usages for charts in the state.
+   *
+   * @return {void}
+   */
   const getDeviceUsagesDurationAndEnergyUsageByDate = () => {
     const deviceUsagesByDate = SelectedDeviceUsages.reduce((groups, deviceUsage) => {
       const { usageDate, durationInMinutes, energy_usage_in_kwh, device } = deviceUsage
@@ -99,11 +110,39 @@ function Home() {
       groups[key].energy_usage_in_kwh = groups[key].energy_usage_in_kwh + parseFloat(energy_usage_in_kwh)
       return groups
     }, {})
-
     const deviceUsagesByDateList = Object.values(deviceUsagesByDate).slice(-7)
     setDeviceUsagesForCharts(deviceUsagesByDateList)
 
     console.log("deviceUsagesByDateList", deviceUsagesByDateList)
+  }
+
+
+  /**
+   * This function processes the device usages data by grouping it by date and counting the number of devices used on each day.
+   *
+   * It first groups the device usages by date using the reduce function.
+   * Then it converts the grouped object to an array of objects and sorts it by date.
+   * Finally, it sets the devices usages for heatmap in the state.
+   *
+   * @return {void}
+   */
+  const getDevicesUsagesForHeatmap = () => {
+
+    const devicesUsagesForHeatmap = devicesUsages.reduce((groups, deviceUsage) => {
+      const { usageDate } = deviceUsage
+      const key = usageDate.split("-").join("/")
+      if (!groups[key]) {
+        groups[key] = new Set()
+      }
+      groups[key].add(deviceUsage.device.id)
+      return groups
+    }, {})
+    const devicesUsagesForHeatmapList = Object.entries(devicesUsagesForHeatmap).map(([key, value]) => ({
+      date : key,
+      count: value.size
+    }))
+    console.log("devicesUsagesForHeatmapList", devicesUsagesForHeatmapList)
+    setSelectedDeviceUsagesForHeatmap(devicesUsagesForHeatmapList)
   }
 
 
@@ -149,6 +188,7 @@ function Home() {
       if (devicesUsages.length > 0) {
         LastDeviceUsageDate()
         TotalEneryUse()
+        getDevicesUsagesForHeatmap()
         //Grouping th e device usages by device id
         const groupedDevicesUsages = devicesUsages.reduce((groups, deviceUsage) => {
           const { device } = deviceUsage
@@ -225,7 +265,7 @@ function Home() {
         </div>
       </div>
       <div className='Overview'>
-        <h2>Overview</h2>
+        <h2 className='moderustic-Title'>Overview</h2>
         <div className='Overview-cards'>
           <Container fluid >
             <Row style={{ marginLeft: "-1.5vw" }}>
@@ -247,13 +287,15 @@ function Home() {
             </Row>
           </Container>
         </div>
-        <h2>Heatmap</h2>
-        <div className='Heatmap'>
-          <HeatmapU />
+        <div className='HeatmapContainer'>
+          <h2 className='moderustic-Title'>Heatmap</h2>
+          <div className='Heatmap'>
+            <HeatmapU infos={SelectedDeviceUsagesForHeatmap} />
+          </div>
         </div>
       </div>
       <div className="DeviceMonitoring">
-        <h2>
+        <h2 className='moderustic-Title'>
           Device Monitoring
         </h2>
 

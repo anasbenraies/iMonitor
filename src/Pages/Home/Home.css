@@ -29,7 +29,7 @@
 }
 
 .Overview-cards {
-  margin-top: 4vh;
+  margin-top: 6vh;
   margin-right: 2vw;
 }
 
@@ -67,3 +67,15 @@
   margin-left: 22%;
   
 }
+
+.HeatmapContainer{
+  margin-top: 3vh;
+}
+
+.moderustic-Title {
+  font-family: "Moderustic", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+

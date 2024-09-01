@@ -32,6 +32,17 @@ function Home() {
   const [DeviceUsagesForCharts, setDeviceUsagesForCharts] = useState([])
   // this sets the device usages to be shown by the Heatmap 
   const [SelectedDeviceUsagesForHeatmap, setSelectedDeviceUsagesForHeatmap] = useState([])
+
+
+
+const Subscriber=()=>{
+
+  
+}
+
+
+
+
   /**
    * Finds the latest device usage date and sets it as the last device usage.
    *
@@ -54,7 +65,7 @@ function Home() {
     let total = 0
     for (let deviceUsage of devicesUsages) {
       if (deviceUsage.usageDate.split("-")[0] === new Date().getFullYear().toString() && deviceUsage.usageDate.split("-")[1] === ('0' + (new Date().getMonth() + 1).toString())) {
-        console.log(deviceUsage.usageDate)
+        //console.log(deviceUsage.usageDate)
         total += deviceUsage.energy_usage_in_kwh
       }
     }
@@ -138,7 +149,7 @@ function Home() {
       return groups
     }, {})
     const devicesUsagesForHeatmapList = Object.entries(devicesUsagesForHeatmap).map(([key, value]) => ({
-      date : key,
+      date: key,
       count: value.size
     }))
     console.log("devicesUsagesForHeatmapList", devicesUsagesForHeatmapList)
@@ -219,9 +230,9 @@ function Home() {
         // set the devices list 
         if (groupedDevicesArray.length > 0) {
           const devicesInfo = groupedDevicesArray.map(deviceUsages => ({
-            id: deviceUsages[0].device.id,
-            type: deviceUsages[0].device.type,
-            model: deviceUsages[0].device.model
+            id: deviceUsages[0].device?.id,
+            type: deviceUsages[0].device?.type || 'Refresh Page',
+            model: deviceUsages[0].device?.model || ''
           }))
           setDevicesList(devicesInfo)
           console.log("devices list", devicesList)
@@ -281,7 +292,7 @@ function Home() {
               </Col>
               <Col md={4}>
                 <Alert variant={"success"} >
-                  Last Usage : {LastDeviceUsage?.device.type}-{LastDeviceUsage?.device.model}-{LastDeviceUsage?.usageDate}
+                  Last Usage : {LastDeviceUsage?.device?.type ? `${LastDeviceUsage?.device?.type}-` : ''}{LastDeviceUsage?.device?.model ? `${LastDeviceUsage?.device?.model}-` : ''}{LastDeviceUsage?.usageDate}
                 </Alert>
               </Col>
             </Row>

@@ -7,6 +7,7 @@ import { Container, Row, Col, Alert, Dropdown } from 'react-bootstrap';
 import TheBarChart from '../../Components/TheBarChart';
 import TheLineChart from '../../Components/TheLineChart';
 import HeatmapU from '../../Components/HeatmapU';
+import mqtt from 'mqtt';
 
 
 /**
@@ -36,8 +37,21 @@ function Home() {
 
 
 const Subscriber=()=>{
-
-  
+    const brokerUrl =process.env.REACT_APP_url+":8883"; // Use wss for WebSocket Secure, ws for WebSocket
+    const options = {
+    username: process.env.REACT_APP_username,
+    password: process.env.REACT_APP_password,
+    reconnectPeriod: 1000, // Reconnect after 1 second if disconnected
+  };
+  const client = mqtt.connect(brokerUrl, options);
+  client.on('connect', () => {
+    console.log('Connected to MQTT broker');
+  });
+  client.on('error', (error) => {
+    console.error('Error connecting to MQTT broker:', error);
+  });
+   // Clean up on component unmount
+   
 }
 
 
@@ -200,6 +214,7 @@ const Subscriber=()=>{
         LastDeviceUsageDate()
         TotalEneryUse()
         getDevicesUsagesForHeatmap()
+        //Subscriber()
         //Grouping th e device usages by device id
         const groupedDevicesUsages = devicesUsages.reduce((groups, deviceUsage) => {
           const { device } = deviceUsage
@@ -238,24 +253,6 @@ const Subscriber=()=>{
           console.log("devices list", devicesList)
         }
 
-
-        // if ( groupedDevicesArray) {
-        //      for ( let deviceUsagesByDevice of groupedDevicesArray ){
-        //       if(deviceUsagesByDevice[0].device.id && deviceUsagesByDevice[0].device.type && deviceUsagesByDevice[0].device.model){
-        //         setDevicesList([...devicesList,{id:deviceUsagesByDevice[0].device.id,type:deviceUsagesByDevice[0].device.type,model:deviceUsagesByDevice[0].device.model}])
-        //       }
-        //      }
-        //      console.log("devices list",devicesList)
-        // }
-
-        //sorting the grouped device usages by date
-        // const sortedGroupedDevicesUsages = Object.entries(groupedDevicesUsages).map(([deviceId, deviceUsages]) => {
-        //   return {
-        //     deviceId,
-        //     deviceUsages: deviceUsages.sort((a, b) => new Date(a.usageDate) - new Date(b.usageDate))
-        //   }
-        // })
-        // console.log(sortedGroupedDevicesUsages)
       }
     }
     ProcessingDeviceUsages();
